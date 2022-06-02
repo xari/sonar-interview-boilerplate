@@ -36,11 +36,15 @@ function Card({
   stargazers_count,
 }) {
   return (
-    <div>
+    <div className="card-wrapper">
       <img alt={`User img for ${owner}'s profile`} src={avatar_url} />
-      <a href={html_url}>{full_name}</a>
-      <span>{description}</span>
-      <span>{stargazers_count} Stars</span>
+      <div>
+        <h1>
+          <a href={html_url}>{full_name}</a>
+        </h1>
+        <p>{description}</p>
+        <span>{stargazers_count} Stars</span>
+      </div>
     </div>
   );
 }
@@ -95,7 +99,7 @@ function App() {
       : null;
 
   return (
-    <div>
+    <div className="content-wrapper">
       <input onChange={debounceHandleChange} />
       <div className="grid">
         {repos.items &&
@@ -110,7 +114,7 @@ function App() {
       </div>
       {pagination && (
         <div className="more-wrapper">
-          <div>{pagination}</div>
+          <span>{pagination}</span>
           <button onClick={debounceHandleClick}>Load more</button>
         </div>
       )}
