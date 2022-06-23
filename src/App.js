@@ -39,9 +39,9 @@ function Card({
     <div className="card-wrapper">
       <img alt={`User img for ${owner}'s profile`} src={avatar_url} />
       <div>
-        <h1>
-          <a href={html_url}>{full_name}</a>
-        </h1>
+        <a href={html_url} target="_blank" rel="noreferrer">
+          <h1 tabIndex="0">{full_name}</h1>
+        </a>
         <p>{description}</p>
         <span>{stargazers_count} Stars</span>
       </div>
@@ -112,7 +112,10 @@ function App() {
 
   return (
     <div className="content-wrapper">
-      <input onChange={debounceHandleChange} />
+      <input
+        onChange={debounceHandleChange}
+        placeholder="Search GitHub for repos here"
+      />
       <div className="grid">
         {repos.items &&
           repos.items.map((repo) => <Card key={repo.id} {...repo} />)}
