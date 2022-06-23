@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import _ from "lodash";
 import "./App.css";
 
@@ -49,20 +49,37 @@ function Card({
   );
 }
 
+function reduceRepos(state, { type, ...repos }) {
+  switch (type) {
+    case "clear":
+      return {};
+    case "fill":
+      return repos;
+    case "increment":
+      return {
+        ...state,
+        items: [...state.items, ...repos.items],
+        page: state.page + 1,
+      };
+    default:
+      throw new Error();
+  }
+}
+
 function App() {
   const [loading, setLoading] = useState(false);
-  const [repos, setRepos] = useState({});
+  const [repos, dispatchRepos] = useReducer(reduceRepos, {});
 
   const handleChange = async (e) => {
     const searchQuery = e.target.value;
 
     if (searchQuery === "") {
-      setRepos({}); // User has cleared the input field
+      dispatchRepos({ type: "clear" }); // User has cleared the input field
     } else {
       setLoading(true);
 
       fetchRepos(searchQuery)
-        .then((repos) => setRepos(repos))
+        .then((repos) => dispatchRepos({ type: "fill", ...repos }))
         .then(() => setLoading(false));
     }
   };
@@ -70,18 +87,13 @@ function App() {
   const debounceHandleChange = _.debounce(handleChange, 1000);
 
   const handleClick = async () => {
-    const { q, total_count, items: prevItems, page: prevPage } = repos;
+    const { q, page } = repos;
 
     setLoading(true);
 
-    fetchRepos(q, prevPage + 1)
-      .then(({ items: newItems, page: newPage }) => {
-        setRepos({
-          q,
-          total_count,
-          items: [...prevItems, ...newItems],
-          page: newPage,
-        });
+    fetchRepos(q, page + 1)
+      .then(({ items }) => {
+        dispatchRepos({ type: "increment", items });
       })
       .then(() => setLoading(false));
   };
