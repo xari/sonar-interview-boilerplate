@@ -60,7 +60,7 @@ img {
   align-items: flex-center;
   background-color: rgb(245 245 245);
   display: flex;
-  padding: 15px;
+  padding: 15px 25px 15px 15px;
 }
 
 .card-wrapper a,
