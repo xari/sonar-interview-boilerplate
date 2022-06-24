@@ -40,10 +40,10 @@ function Card({
       <img alt={`User img for ${owner}'s profile`} src={avatar_url} />
       <div>
         <a href={html_url} target="_blank" rel="noreferrer">
-          <h1 tabIndex="0">{full_name}</h1>
+          <h2 tabIndex="0">{full_name}</h2>
         </a>
         <p>{description}</p>
-        <span>{stargazers_count} Stars</span>
+        <span>⭐ {stargazers_count}</span>
       </div>
     </div>
   );
@@ -84,7 +84,7 @@ function App() {
     }
   };
 
-  const debounceHandleChange = _.debounce(handleChange, 1000);
+  const debounceHandleChange = _.debounce(handleChange, 800);
 
   const handleClick = async () => {
     const { q, page } = repos;
@@ -98,7 +98,7 @@ function App() {
       .then(() => setLoading(false));
   };
 
-  const debounceHandleClick = _.debounce(handleClick, 1000);
+  const debounceHandleClick = _.debounce(handleClick, 500);
 
   useEffect(() => {
     console.log(loading);
@@ -111,20 +111,20 @@ function App() {
       : null;
 
   return (
-    <div className="content-wrapper">
+    <div>
       <input
         onChange={debounceHandleChange}
         placeholder="Search GitHub for repos here"
       />
       <div className="grid">
         {repos.items &&
-          repos.items.map((repo) => <Card key={repo.id} {...repo} />)}
+          repos.items.map((repo, i) => <Card key={i} {...repo} />)}
       </div>
       <div className="help-text">
         {loading
           ? "Loading..."
           : repos.items && repos.items.length === 0
-          ? "Nothing found."
+          ? "No repositories matched that query."
           : null}
       </div>
       {pagination && (

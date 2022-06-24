@@ -4,12 +4,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Sonar interview demo app" />
+    <meta
+      name="description"
+      content="A React app for fetching and displaying GitHub repos."
+    />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <title>Sonar GitHub Repo App</title>
+    <title>GitHub Repo Fetcher</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <h1>GitHub Repo Fetcher</h1>
+    <p>
+      This React app is an interface for the
+      <a
+        href="https://docs.github.com/en/rest/repos"
+        target="_blank"
+        rel="noreferrer"
+        >GitHub Repos API</a
+      >.
+      <br />
+      Search for any repository by typing your search string into the box below
+      to get started, and open the browser console to monitor the state changes.
+    </p>
     <div id="root"></div>
   </body>
 </html>
