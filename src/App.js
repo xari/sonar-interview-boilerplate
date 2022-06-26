@@ -2,21 +2,26 @@ import { useEffect, useState, useReducer } from "react";
 import _ from "lodash";
 import "./App.css";
 
+const truncate = (input, n = 80) =>
+  input.length > n ? `${input.substring(0, n)}...` : input;
+
 function fetchRepos(q, page = 1) {
   return fetch(
     `https://api.github.com/search/repositories?q=${q}&per_page=5&page=${page}`
   )
     .then((response) => response.json())
     .then((newRepos) => {
-      const repoItems = newRepos.items.map((item) => ({
-        id: item.id,
-        full_name: item.full_name,
-        avatar_url: item.owner.avatar_url,
-        owner: item.owner.login,
-        html_url: item.html_url,
-        description: item.description,
-        stargazers_count: item.stargazers_count,
-      }));
+      const repoItems = newRepos.items.map((item) => {
+        return {
+          id: item.id,
+          full_name: item.full_name,
+          avatar_url: item.owner.avatar_url,
+          owner: item.owner.login,
+          html_url: item.html_url,
+          description: item.description && truncate(item.description),
+          stargazers_count: item.stargazers_count,
+        };
+      });
 
       return {
         q,
@@ -100,6 +105,7 @@ function App() {
 
   const debounceHandleClick = _.debounce(handleClick, 500);
 
+  // For monitoring state changes
   useEffect(() => {
     console.log(loading);
     console.log(repos);
@@ -114,23 +120,23 @@ function App() {
     <div>
       <input
         onChange={debounceHandleChange}
-        placeholder="Search GitHub for repos here"
+        placeholder="Search for repos here"
       />
+      {loading ? (
+        <span className="load-text">Loading...</span>
+      ) : repos.items && repos.items.length === 0 ? (
+        <span className="help-text">No repositories matched that query.</span>
+      ) : null}
       <div className="grid">
         {repos.items &&
           repos.items.map((repo, i) => <Card key={i} {...repo} />)}
       </div>
-      <div className="help-text">
-        {loading
-          ? "Loading..."
-          : repos.items && repos.items.length === 0
-          ? "No repositories matched that query."
-          : null}
-      </div>
       {pagination && (
         <div className="more-wrapper">
           <span>{pagination}</span>
-          <button onClick={debounceHandleClick}>Load more</button>
+          <button onClick={debounceHandleClick}>
+            {loading ? "Loading..." : "Load more"}
+          </button>
         </div>
       )}
     </div>

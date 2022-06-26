@@ -21,6 +21,9 @@ h2 {
 }
 
 a {
+  color: RGB(24, 24, 246);
+  border-bottom: solid 1px RGB(24, 24, 246);
+  padding-bottom: 0px;
   text-decoration: none;
 }
 
@@ -36,6 +39,7 @@ button {
 }
 
 input {
+  border: solid 1px darkgray;
   padding: 10px 15px;
   margin: 1rem auto;
   font-size: 1.2rem;
@@ -61,6 +65,9 @@ img {
   background-color: rgb(245 245 245);
   display: flex;
   padding: 15px 25px 15px 15px;
+  box-shadow: lightgray 2px 2px 1px -1px;
+  border: 1px solid darkgray;
+  overflow: hidden;
 }
 
 .card-wrapper a,
@@ -72,6 +79,7 @@ img {
 .more-wrapper {
   display: flex;
   align-items: center;
+  margin: 1rem 0;
 }
 
 .more-wrapper > span,
@@ -79,8 +87,13 @@ img {
   margin: 0 10px;
 }
 
+.load-text {
+  margin: auto 1rem;
+}
+
 .help-text {
-  margin: 1rem 0;
+  display: block;
+  margin: auto;
 }
 
 @media screen and (max-width: 750px) {
