@@ -111,11 +111,6 @@ function App() {
     console.log(repos);
   });
 
-  const pagination =
-    repos.page && repos.total_count
-      ? `${repos.page * 5} of ${repos.total_count}`
-      : null;
-
   return (
     <div>
       <input
@@ -131,14 +126,21 @@ function App() {
         {repos.items &&
           repos.items.map((repo, i) => <Card key={i} {...repo} />)}
       </div>
-      {pagination && (
-        <div className="more-wrapper">
-          <span>{pagination}</span>
-          <button onClick={debounceHandleClick}>
-            {loading ? "Loading..." : "Load more"}
-          </button>
-        </div>
-      )}
+      <div className="more-wrapper">
+        {repos.items && repos.items.length < repos.total_count ? (
+          <>
+            <span>{`${repos.items.length} of ${repos.total_count}`}</span>
+            <button onClick={debounceHandleClick}>
+              {loading ? "Loading..." : "Load more"}
+            </button>
+          </>
+        ) : (
+          repos.items &&
+          repos.total_count && (
+            <span>{`All ${repos.items.length} of ${repos.total_count} matching repositories shown.`}</span>
+          )
+        )}
+      </div>
     </div>
   );
 }
