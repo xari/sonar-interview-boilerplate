@@ -134,12 +134,9 @@ function App() {
               {loading ? "Loading..." : "Load more"}
             </button>
           </>
-        ) : (
-          repos.items &&
-          repos.total_count && (
-            <span>{`All ${repos.items.length} of ${repos.total_count} matching repositories shown.`}</span>
-          )
-        )}
+        ) : repos.items && repos.total_count ? (
+          <span>{`All ${repos.items.length} of ${repos.total_count} matching repositories shown.`}</span>
+        ) : null}
       </div>
     </div>
   );
