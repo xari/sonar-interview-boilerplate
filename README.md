@@ -1,6 +1,6 @@
 # GitHub Repo Fetcher
 
-Hosted [here](https://xari.github.io/sonar-interview-react-app/), screenshot below.
+Hosted [here](https://xari.github.io/github-repo-fetch/), screenshot below.
 
 ![Screenshot of the app](./screenshot.png)
 

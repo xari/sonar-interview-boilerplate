@@ -1,6 +1,6 @@
 {
-  "name": "sonar-interview-react-app",
-  "homepage": "https://xari.github.io/sonar-interview-react-app",
+  "name": "GitHub Repo Fetch",
+  "homepage": "https://xari.github.io/github-repo-fetch",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
