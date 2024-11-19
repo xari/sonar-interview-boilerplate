@@ -5,7 +5,7 @@ import "./App.css";
 const truncate = (input, n = 80) =>
   input.length > n ? `${input.substring(0, n)}...` : input;
 
-function fetchRepos(q, page = 1) {
+async function fetchRepos(q, page = 1) {
   return fetch(
     `https://api.github.com/search/repositories?q=${q}&per_page=5&page=${page}`
   )
@@ -41,16 +41,14 @@ function Card({
   stargazers_count,
 }) {
   return (
-    <div className="card-wrapper">
+    <a className="card-wrapper" href={html_url} target="_blank" rel="noreferrer">
       <img alt={`User img for ${owner}'s profile`} src={avatar_url} />
-      <div>
-        <a href={html_url} target="_blank" rel="noreferrer">
-          <h2 tabIndex="0">{full_name}</h2>
-        </a>
+      <div className="card-content">
+        <h2>{full_name}</h2>
         <p>{description}</p>
         <span>⭐ {stargazers_count}</span>
       </div>
-    </div>
+    </a>
   );
 }
 
