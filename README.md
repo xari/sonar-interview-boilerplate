@@ -2,7 +2,7 @@
 
 Hosted [here](https://xari.github.io/github-repo-fetch/), screenshot below.
 
-![image](https://github.com/user-attachments/assets/3dc47642-b2f5-4e53-a07c-d1785201a468)
+![image](https://github.com/user-attachments/assets/945b3dd5-c498-4a05-98d8-fc1f6bb6a1e7)
 
 This app demonstrates the following features that I find fun:
 
