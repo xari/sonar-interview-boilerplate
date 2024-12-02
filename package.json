@@ -1,10 +1,11 @@
 {
   "name": "GitHub Repo Fetch",
-  "homepage": "https://xari.github.io/github-repo-fetch",
-  "version": "27.12.24",
+  "homepage": "https://xari.github.io/sonar-interview-boilerplate/",
+  "version": "02.12.24",
   "type": "module",
   "private": true,
   "dependencies": {
+    "lodash": "^4.17.21",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
   },
@@ -13,7 +14,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d dist"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
@@ -38,7 +41,6 @@
     "gh-pages": "^6.2.0",
     "globals": "^15.12.0",
     "jsdom": "^25.0.1",
-    "lodash": "^4.17.21",
     "msw": "^2.6.6",
     "prettier": "3.4.1",
     "typescript": "^5.7.2",

@@ -16,7 +16,6 @@ h1 {
 }
 
 h2 {
-  font-family: Helvetica, sans-serif;
   font-weight: 800;
   font-size: 1.4rem;
   margin: unset;
@@ -67,79 +66,4 @@ input:focus {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   max-width: 1100px;
-}
-
-img {
-  border: solid lightgray 1px;
-  border-radius: 50%;
-  height: 75px;
-  width: 75px;
-  margin: 0 20px 0 0;
-  padding: 2px;
-}
-
-.card-wrapper {
-  align-items: flex-center;
-  background-color: rgb(245 245 245);
-  display: flex;
-  padding: 25px 25px 15px 15px;
-  box-shadow: lightgray 2px 2px 1px -1px;
-  border: 1px solid darkgray;
-  overflow: hidden;
-}
-
-.card-wrapper:hover {
-  filter: brightness(110%);
-}
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  gap: 5px;
-}
-
-.card-content > p {
-  font-family: "Times New Roman", Times, serif;
-  margin: unset;
-}
-
-.card-content > span {
-  align-self: flex-end;
-  margin-top: auto;
-}
-
-.more-wrapper {
-  display: flex;
-  align-items: center;
-  margin: 1rem 0;
-}
-
-.more-wrapper > span,
-.more-wrapper > button {
-  margin: 0 10px;
-}
-
-.more-wrapper > button:hover {
-  cursor: pointer;
-  filter: brightness(110%);
-}
-
-.error-text {
-  color: red;
-}
-
-.help-text {
-  display: block;
-  margin: auto;
-}
-
-@media screen and (max-width: 750px) {
-  body {
-    margin: 2rem 1.5rem;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
 }
