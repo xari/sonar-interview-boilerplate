@@ -1,36 +1,8 @@
-import { useEffect, useState, useReducer } from "react";
+import { useState, useReducer } from "react";
 import _ from "lodash";
+
+import { fetchRepos } from "./fetchRepos";
 import "./App.css";
-
-const truncate = (input, n = 80) =>
-  input.length > n ? `${input.substring(0, n)}...` : input;
-
-async function fetchRepos(q, page = 1) {
-  return fetch(
-    `https://api.github.com/search/repositories?q=${q}&per_page=5&page=${page}`
-  )
-    .then((response) => response.json())
-    .then((newRepos) => {
-      const repoItems = newRepos.items.map((item) => {
-        return {
-          id: item.id,
-          full_name: item.full_name,
-          avatar_url: item.owner.avatar_url,
-          owner: item.owner.login,
-          html_url: item.html_url,
-          description: item.description && truncate(item.description),
-          stargazers_count: item.stargazers_count,
-        };
-      });
-
-      return {
-        q,
-        total_count: newRepos.total_count,
-        items: repoItems,
-        page,
-      };
-    });
-}
 
 function Card({
   owner,
@@ -41,7 +13,12 @@ function Card({
   stargazers_count,
 }) {
   return (
-    <a className="card-wrapper" href={html_url} target="_blank" rel="noreferrer">
+    <a
+      className="card-wrapper"
+      href={html_url}
+      target="_blank"
+      rel="noreferrer"
+    >
       <img alt={`User img for ${owner}'s profile`} src={avatar_url} />
       <div className="card-content">
         <h2>{full_name}</h2>
@@ -70,6 +47,7 @@ function reduceRepos(state, { type, ...repos }) {
 }
 
 function App() {
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [repos, dispatchRepos] = useReducer(reduceRepos, {});
 
@@ -81,7 +59,7 @@ function App() {
     } else {
       setLoading(true);
 
-      fetchRepos(searchQuery)
+      fetchRepos(searchQuery, (_error) => setError(true))
         .then((repos) => dispatchRepos({ type: "fill", ...repos }))
         .then(() => setLoading(false));
     }
@@ -94,7 +72,7 @@ function App() {
 
     setLoading(true);
 
-    fetchRepos(q, page + 1)
+    fetchRepos(q, (_error) => setError(true), page + 1)
       .then(({ items }) => {
         dispatchRepos({ type: "increment", items });
       })
@@ -103,20 +81,19 @@ function App() {
 
   const debounceHandleClick = _.debounce(handleClick, 500);
 
-  // For monitoring state changes
-  useEffect(() => {
-    console.log(loading);
-    console.log(repos);
-  });
-
   return (
     <div>
-      <input
-        onChange={debounceHandleChange}
-        placeholder="Search for repos here"
-      />
+      <label htmlFor="name">
+        Repository name
+        <input
+          id="name"
+          onChange={debounceHandleChange}
+          placeholder="Search for repos here"
+        />
+      </label>
+      {error ? <span className="error-text">Something went wrong.</span> : null}
       {loading ? (
-        <span className="load-text">Loading...</span>
+        <span>Loading...</span>
       ) : repos.items && repos.items.length === 0 ? (
         <span className="help-text">No repositories matched that query.</span>
       ) : null}

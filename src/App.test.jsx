@@ -1,55 +1,74 @@
-import React from "react";
-import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
-import { render, fireEvent, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
+import React from "react";
+import { afterEach, vi } from "vitest";
+import * as formattedMockData from "./formatted-mock-data.json" assert { type: "json" };
 
-import App from './App'
-import Fetch from "./Fetch.jsx";
+import App from "./App";
+import * as fetchReposModule from "./fetchRepos";
 
-import mockData from "./mock-data.json";
-
-const server = setupServer(
-  http.get("https://api.github.com/search/repositories", () => {
-    const url = new URL(request.url);
-    const query = url.searchParams.get("q");
-
-    if (query === "sonar") {
-      return HttpResponse.json(mockData);
-    }
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
-test("loads and displays greeting", async () => {
-  render(<App />);
-
-  const input = screen.getByLabelText('Repository name')
-
-  fireEvent.change(input, () => 'Sonar');
-
-  await screen.findByRole("heading");
-
-  expect(screen.getByRole("heading")).toHaveTextContent("hello there");
-  expect(screen.getByRole("button")).toBeDisabled();
+afterEach(() => {
+  // restore the spy created with spyOn
+  vi.restoreAllMocks();
 });
 
-test("handles server error", async () => {
-  server.use(
-    http.get("/greeting", () => {
-      return new HttpResponse(null, { status: 500 });
-    })
-  );
+describe("the repo fetcher UI", () => {
+  it("loads and displays a text input", async () => {
+    render(<App />);
 
-  render(<Fetch url="/greeting" />);
+    const input = screen.getByLabelText("Repository name");
 
-  fireEvent.click(screen.getByText("Load Greeting"));
+    expect(input).toBeInTheDocument();
+  });
 
-  await screen.findByRole("alert");
+  it("can fetch repositories from the API -- Mock implementation", async () => {
+    const spy = vi
+      .spyOn(fetchReposModule, "fetchRepos")
+      .mockResolvedValue(formattedMockData);
 
-  expect(screen.getByRole("alert")).toHaveTextContent("Oops, failed to fetch!");
-  expect(screen.getByRole("button")).not.toBeDisabled();
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const input = screen.getByLabelText("Repository name");
+
+    await user.type(input, "sonar");
+
+    await waitFor(() =>
+      expect(spy).toHaveBeenCalledWith("sonar", expect.any(Function))
+    );
+  });
+
+  it("render a list of fetched repositories (with clickable links)", async () => {
+    const spy = vi
+      .spyOn(fetchReposModule, "fetchRepos")
+      .mockResolvedValue(formattedMockData);
+
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    const input = screen.getByLabelText("Repository name");
+
+    await user.type(input, "sonar");
+
+    await waitFor(() => {
+      // Second param is a callback
+      expect(spy).toHaveBeenCalledWith("sonar", expect.any(Function));
+    });
+
+    const repoLink = screen.getByRole("link", {
+      textContent: "SonarSource/sonarqube",
+    });
+
+    expect(repoLink).toBeInTheDocument();
+
+    expect(repoLink).toHaveAttribute(
+      "href",
+      "https://github.com/SonarSource/sonarqube"
+    );
+
+    expect(repoLink).toHaveAttribute("target", "_blank");
+  });
 });
