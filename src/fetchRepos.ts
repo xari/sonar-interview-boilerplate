@@ -1,7 +1,9 @@
-const truncate = (input, n = 80) =>
+import {ServerResponse} from './types'
+
+const truncate = (input: string, n: number = 80) =>
   input.length > n ? `${input.substring(0, n)}...` : input;
 
-export function formatResponse(newRepos, q, page) {
+export function formatResponse(newRepos: ServerResponse, q: string, page: number) {
   const repoItems = newRepos.items.map((item) => {
     return {
       id: item.id,
@@ -22,7 +24,7 @@ export function formatResponse(newRepos, q, page) {
   };
 }
 
-export async function fetchRepos(q, handleCatch = () => {}, page = 1) {
+export async function fetchRepos(q: string, handleCatch: () => void = () => {}, page = 1) {
   return fetch(
     `https://api.github.com/search/repositories?q=${q}&per_page=5&page=${page}`
   )

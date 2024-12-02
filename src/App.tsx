@@ -1,24 +1,14 @@
-import { useState, useReducer } from "react";
-import _ from "lodash";
+import React from 'react';
+import { useState, useReducer } from 'react';
+import _ from 'lodash';
 
-import { fetchRepos } from "./fetchRepos";
-import "./App.css";
+import { fetchRepos } from './fetchRepos';
+import { ReposState } from './types';
+import './App.css';
 
-function Card({
-  owner,
-  avatar_url,
-  html_url,
-  full_name,
-  description,
-  stargazers_count,
-}) {
+function Card({ owner, avatar_url, html_url, full_name, description, stargazers_count }) {
   return (
-    <a
-      className="card-wrapper"
-      href={html_url}
-      target="_blank"
-      rel="noreferrer"
-    >
+    <a className="card-wrapper" href={html_url} target="_blank" rel="noreferrer">
       <img alt={`User img for ${owner}'s profile`} src={avatar_url} />
       <div className="card-content">
         <h2>{full_name}</h2>
@@ -29,13 +19,13 @@ function Card({
   );
 }
 
-function reduceRepos(state, { type, ...repos }) {
+function reduceRepos(state: ReposState, { type, ...repos }: { type: string }) {
   switch (type) {
-    case "clear":
+    case 'clear':
       return {};
-    case "fill":
+    case 'fill':
       return repos;
-    case "increment":
+    case 'increment':
       return {
         ...state,
         items: [...state.items, ...repos.items],
@@ -54,13 +44,13 @@ function App() {
   const handleChange = async (e) => {
     const searchQuery = e.target.value;
 
-    if (searchQuery === "") {
-      dispatchRepos({ type: "clear" }); // User has cleared the input field
+    if (searchQuery === '') {
+      dispatchRepos({ type: 'clear' }); // User has cleared the input field
     } else {
       setLoading(true);
 
       fetchRepos(searchQuery, (_error) => setError(true))
-        .then((repos) => dispatchRepos({ type: "fill", ...repos }))
+        .then((repos) => dispatchRepos({ type: 'fill', ...repos }))
         .then(() => setLoading(false));
     }
   };
@@ -74,7 +64,7 @@ function App() {
 
     fetchRepos(q, (_error) => setError(true), page + 1)
       .then(({ items }) => {
-        dispatchRepos({ type: "increment", items });
+        dispatchRepos({ type: 'increment', items });
       })
       .then(() => setLoading(false));
   };
@@ -85,11 +75,7 @@ function App() {
     <div>
       <label htmlFor="name">
         Repository name
-        <input
-          id="name"
-          onChange={debounceHandleChange}
-          placeholder="Search for repos here"
-        />
+        <input id="name" onChange={debounceHandleChange} placeholder="Search for repos here" />
       </label>
       {error ? <span className="error-text">Something went wrong.</span> : null}
       {loading ? (
@@ -98,16 +84,13 @@ function App() {
         <span className="help-text">No repositories matched that query.</span>
       ) : null}
       <div className="grid">
-        {repos.items &&
-          repos.items.map((repo, i) => <Card key={i} {...repo} />)}
+        {repos.items && repos.items.map((repo, i) => <Card key={i} {...repo} />)}
       </div>
       <div className="more-wrapper">
         {repos.items && repos.items.length < repos.total_count ? (
           <>
             <span>{`${repos.items.length} of ${repos.total_count}`}</span>
-            <button onClick={debounceHandleClick}>
-              {loading ? "Loading..." : "Load more"}
-            </button>
+            <button onClick={debounceHandleClick}>{loading ? 'Loading...' : 'Load more'}</button>
           </>
         ) : repos.items && repos.total_count ? (
           <span>{`All ${repos.items.length} of ${repos.total_count} matching repositories shown.`}</span>
